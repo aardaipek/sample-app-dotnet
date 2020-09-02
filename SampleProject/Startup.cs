@@ -24,6 +24,17 @@ namespace SampleProject
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                   options.AddPolicy("_cors_settings",
+                        builder => builder
+                        .WithOrigins("http://localhost:3000", "http://localhost:3001")
+                        .WithMethods("GET","POST"));
+
+                options.AddPolicy("AllowOrigin",
+                    builder => builder.AllowAnyOrigin());
+            });
+
             services.AddControllers();
         }
 
@@ -38,6 +49,8 @@ namespace SampleProject
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors("_cors_settings");
 
             app.UseEndpoints(endpoints =>
             {
